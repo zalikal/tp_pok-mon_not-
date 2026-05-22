@@ -1,5 +1,6 @@
 package com.pokemon.shop.service;
 
+import com.pokemon.shop.exception.ResourceNotFoundException;
 import com.pokemon.shop.model.Card;
 import com.pokemon.shop.model.Order;
 import com.pokemon.shop.repository.CardRepository;
@@ -7,7 +8,6 @@ import com.pokemon.shop.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +20,9 @@ public class OrderService {
         String[] ids = order.getCardIds().split(",");
         double total = 0;
         for (String idStr : ids) {
-            Card card = cardRepository.findById(Long.parseLong(idStr.trim()))
-                    .orElseThrow(() -> new RuntimeException("Card introuvable"));
+            Long cardId = Long.parseLong(idStr.trim());
+            Card card = cardRepository.findById(cardId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Card", cardId));
             total += card.getPrice();
         }
         order.setTotalPrice(total);

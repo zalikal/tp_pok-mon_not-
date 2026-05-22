@@ -1,5 +1,6 @@
 package com.pokemon.shop.service;
 
+import com.pokemon.shop.exception.ResourceNotFoundException;
 import com.pokemon.shop.model.Card;
 import com.pokemon.shop.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class CardService {
 
     public Card findById(Long id) {
         return cardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Card introuvable"));
+                .orElseThrow(() -> new ResourceNotFoundException("Card", id));
     }
 
     public Card save(Card card) {
